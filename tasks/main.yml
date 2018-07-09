@@ -1,0 +1,13 @@
+- name: Gather variables for each OS
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+
+- include: install.yml
+  tags:
+    - etcd-install
+
+- include: post_install.yml
+  tags:
+    - etcd-config

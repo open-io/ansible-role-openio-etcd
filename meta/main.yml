@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Julien Kasarherou <julien@openio.io>
+  description: Install and configure etcd clusters
+  license: Apache2
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+    - name: EL
+      versions:
+        - 7
+dependencies: []
+

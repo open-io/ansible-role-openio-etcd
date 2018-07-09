@@ -1,0 +1,59 @@
+- name: Ensure etcd configuration directory exists
+  file:
+    path: "{{ etcd_config_dir }}"
+    state: directory
+  tags:
+    - etcd-config
+
+- name: Ensure etcd data directory exists
+  file:
+    path: "{{ etcd_data_dir }}"
+    state: directory
+    owner: "etcd"
+    group: "etcd"
+    mode: "0755"
+  tags:
+    - etcd-config
+
+- name: Enable etcd service
+  service:
+    name: "etcd"
+    enabled: "yes"
+
+- name: Create systemd override directory
+  file:
+    path: "{{ etcd_systemd_dir }}"
+    state: "directory"
+  tags:
+    - etcd-config
+
+- name: Drop etcd systemd configs
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - "Reload systemd daemon"
+    - "Restart etcd service"
+  with_items:
+    - { src: "systemd-etcd-override.conf.j2", dest: "/etc/systemd/system/etcd.service.d/override.conf" }
+    - { src: "systemd-etcd.conf.j2", dest: "{{ etcd_config_dir }}/etcd.conf" }
+  tags:
+    - etcd-config
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Verify etcd cluster
+  command: etcdctl cluster-health
+  register: etcd_health
+  failed_when: etcd_health.rc != 0
+  until: etcd_health is success
+  retries: 5
+  delay: 2
+  when: inventory_hostname == groups[etcd_cluster_group][0]
+  tags:
+    - etcd-config
+
