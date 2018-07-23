@@ -5,8 +5,8 @@ etcd_config_dir: "/etc/etcd"
 etcd_data_dir: "/var/lib/etcd"
 etcd_systemd_dir: "/etc/systemd/system/etcd.service.d"
 
-etcd_local_address: "{{ ansible_host | default('127.0.0.1') }}"
+etcd_local_address: "{{ ansible_default_ipv4.address | default('127.0.0.1') }}"
 
-etcd_access_method: "http"
+etcd_access_method: http
 etcd_peer_port: 2380
 etcd_client_port: 2379
