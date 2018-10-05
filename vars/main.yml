@@ -1,2 +1,0 @@
-etcd_cluster_ips: "{{ groups[etcd_cluster_group] | map('extract', hostvars, etcd_ip_attr.split('.')) | list }}"
-etcd_cluster: "{{ groups[etcd_cluster_group] | zip(etcd_cluster_ips) | list }}"

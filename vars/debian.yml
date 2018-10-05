@@ -1,2 +1,4 @@
+---
 etcd_distro_packages:
   - etcd
+...
