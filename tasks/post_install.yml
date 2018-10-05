@@ -37,10 +37,14 @@
     - { src: "systemd-etcd-override.conf.j2", dest: "/etc/systemd/system/etcd.service.d/override.conf" }
     - { src: "systemd-etcd.conf.j2", dest: "{{ etcd_config_dir }}/etcd.conf" }
 
+- name: Reload systemd
+  systemd:
+    daemon_reload: true
+  when: _systemd_conf.changed
+
 - name: Restart etcd service
   service:
     name: etcd
-    daemon_reload: true
     state: restarted
   when: _systemd_conf.changed
 
