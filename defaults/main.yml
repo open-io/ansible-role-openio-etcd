@@ -1,3 +1,4 @@
+---
 etcd_cluster_group: etcd_all
 etcd_initial_cluster_token: etcd-cluster-0
 
@@ -5,10 +6,11 @@ etcd_config_dir: /etc/etcd
 etcd_data_dir: /var/lib/etcd
 etcd_systemd_dir: /etc/systemd/system/etcd.service.d
 
-etcd_ip_attr: ansible_default_ipv4.address
-
-etcd_local_address: "{{ ansible_default_ipv4.address | default('127.0.0.1') }}"
+etcd_bind_interface: "{{ ansible_default_ipv4.alias }}"
+etcd_bind_address:
+  "{{ hostvars[inventory_hostname]['ansible_' + etcd_bind_interface]['ipv4']['address'] }}"
 
 etcd_access_method: http
 etcd_peer_port: 2380
 etcd_client_port: 2379
+...

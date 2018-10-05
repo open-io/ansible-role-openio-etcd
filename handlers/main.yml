@@ -1,8 +1,0 @@
-- name: Reload systemd daemon
-  systemd:
-    daemon_reload: "yes"
-
-- name: Restart etcd service
-  service:
-    name: "etcd"
-    state: "restarted"
